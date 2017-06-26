@@ -1,4 +1,5 @@
 #oracle
+##一对多的时候就往往选择分组
 分组
 `select sum(sal) from emp_sal where deptno = 30`
 结果：
@@ -180,4 +181,19 @@ select * from student where sno = (select sno from sc where score > (select scor
 
 --正确打开方式：
 select * from student where sno in (select sno from sc where score > (select score from sc where sno = 109 and cno = 3105));
+```
+
+查询Sc中选学一门以上课程的同学中分数为非最高分成绩的记录。
+```
+--- 查询没门的最高成绩
+select * from sc 
+where score in 
+(select max(score) from sc group by cno);
+```
+
+###分组
+```
+-- 查询选修某课程的同学人数多于5人的教师姓名。
+错误演示：（本质上其实是返回的所有教师名字，应该按课程号分组）
+select tname from teacher where (select count(cno) from sc)>5 ;
 ```
